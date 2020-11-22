@@ -35,6 +35,11 @@ namespace Lightly
     using KDecoration2::ColorGroup;
     using KDecoration2::DecorationButtonType;
 
+    const auto SIERRA_hover_hint_color  = QColor(41, 43, 50, 200);
+    const auto SIERRA_inactive_color    = QColor(199, 199, 199);
+    const auto SIERRA_close_color       = QColor(242, 80, 86);
+    const auto SIERRA_maximize_color    = QColor(19, 209, 61);
+    const auto SIERRA_minimize_color    = QColor(252, 190, 7);
 
     //__________________________________________________________________
     Button::Button(DecorationButtonType type, Decoration* decoration, QObject* parent)
@@ -206,59 +211,32 @@ namespace Lightly
             pen.setJoinStyle( Qt::MiterJoin );
             pen.setWidthF( PenWidth::Symbol*qMax((qreal)1.0, 20/width ) );
 
+            // SierraBreeze fill
+            if ( type() == DecorationButtonType::Close || type() == DecorationButtonType::Maximize || type() == DecorationButtonType::Minimize) {
+                pen.setWidthF( 1.5*qMax((qreal)1.0, 20/width ) );
+            }
+
             painter->setPen( pen );
             painter->setBrush( Qt::NoBrush );
-
-            /* === SIERRA BREEZE === */
-            auto d = qobject_cast<Decoration*>( decoration() );
-            auto c = d->client().data();
-
-            const auto hover_hint_color = QColor(41, 43, 50, 200);
-            QPen hint_pen(hover_hint_color);
-            hint_pen.setCapStyle( Qt::RoundCap );
-            hint_pen.setJoinStyle( Qt::MiterJoin );
-            hint_pen.setWidthF( 1.5*qMax((qreal)1.0, 20/width ) );
-            /* === SIERRA BREEZE === */
 
             switch( type() )
             {
 
                 case DecorationButtonType::Close:
                 {
-                    QColor button_color = QColor(242, 80, 86);
-                    if (!c->isActive())
-                        button_color = QColor(199, 199, 199);
-
-                    painter->setBrush( button_color );
-                    painter->setPen( Qt::NoPen );
-                    painter->drawEllipse( QRectF( 0, 0, 18, 18 ) );
-                    painter->setBrush( Qt::NoBrush );
                     if ( isHovered() )
                     {
-                        painter->setPen( hint_pen );
-                        // painter->setPen(pen);
                         // it's a cross
                         painter->drawLine( QPointF( 6, 6 ), QPointF( 12, 12 ) );
                         painter->drawLine( QPointF( 6, 12 ), QPointF( 12, 6 ) );
                     }
-                    painter->setPen( pen );
-
                     break;
                 }
 
                 case DecorationButtonType::Maximize:
                 {
-                    QColor button_color = QColor(19, 209, 61);
-                    if (!c->isActive())
-                        button_color = QColor(199, 199, 199);
-
-                    painter->setBrush( button_color );
-                    painter->setPen( Qt::NoPen );
-                    painter->drawEllipse( QRectF( 0, 0, 18, 18 ) );
-                    painter->setBrush( Qt::NoBrush );
                     if ( isHovered() )
                     {
-                        painter->setPen( hint_pen );
                         // two triangles
                         QPainterPath path1, path2;
                         path1.moveTo(5, 13);
@@ -269,29 +247,18 @@ namespace Lightly
                         path2.lineTo(7, 5);
                         path2.lineTo(13, 11);
 
-                        painter->fillPath(path1, QBrush(hover_hint_color));
-                        painter->fillPath(path2, QBrush(hover_hint_color));
+                        painter->fillPath(path1, QBrush(foregroundColor));
+                        painter->fillPath(path2, QBrush(foregroundColor));
                     }
-                    painter->setPen( pen );
                     break;
                 }
 
                 case DecorationButtonType::Minimize:
                 {
-                    QColor button_color = QColor(252, 190, 7);
-                    if (!c->isActive())
-                        button_color = QColor(199, 199, 199);
-
-                    painter->setBrush( button_color );
-                    painter->setPen( Qt::NoPen );
-                    painter->drawEllipse( QRectF( 0, 0, 18, 18 ) );
-                    painter->setBrush( Qt::NoBrush );
                     if ( isHovered() )
                     {
-                        painter->setPen( hint_pen );
                         painter->drawLine( QPointF( 5, 9 ), QPointF( 13, 9 ) );
                     }
-                    painter->setPen( pen );
                     break;
                 }
 
@@ -425,11 +392,11 @@ namespace Lightly
 
             return QColor();
 
+        } else if ( type() == DecorationButtonType::Close || type() == DecorationButtonType::Maximize || type() == DecorationButtonType::Minimize) {
+
+            return SIERRA_hover_hint_color;
+
         } else if( isPressed() ) {
-
-            return d->titleBarColor();
-
-        } else if( type() == DecorationButtonType::Close && d->internalSettings()->outlineCloseButton() ) {
 
             return d->titleBarColor();
 
@@ -464,10 +431,25 @@ namespace Lightly
         }
 
         auto c = d->client().data();
-        if( isPressed() ) {
 
-            if( type() == DecorationButtonType::Close ) return c->color( ColorGroup::Warning, ColorRole::Foreground );
-            else return KColorUtils::mix( d->titleBarColor(), d->fontColor(), 0.3 );
+        // Special treatment for SierraBreeze buttons
+        if ( type() == DecorationButtonType::Close || type() == DecorationButtonType::Maximize || type() == DecorationButtonType::Minimize) {
+            if (!c->isActive()) {
+                return SIERRA_inactive_color;
+            } else {
+                switch (type()) {
+                    case DecorationButtonType::Maximize:
+                        return SIERRA_maximize_color;
+                    case DecorationButtonType::Minimize:
+                        return SIERRA_minimize_color;
+                    case DecorationButtonType::Close:
+                    default:
+                        return SIERRA_close_color;
+                }
+            }
+        } else if( isPressed() ) {
+
+            return KColorUtils::mix( d->titleBarColor(), d->fontColor(), 0.3 );
 
         } else if( ( type() == DecorationButtonType::KeepBelow || type() == DecorationButtonType::KeepAbove || type() == DecorationButtonType::Shade ) && isChecked() ) {
 
