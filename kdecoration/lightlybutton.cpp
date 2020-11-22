@@ -209,44 +209,89 @@ namespace Lightly
             painter->setPen( pen );
             painter->setBrush( Qt::NoBrush );
 
+            /* === SIERRA BREEZE === */
+            auto d = qobject_cast<Decoration*>( decoration() );
+            auto c = d->client().data();
+
+            const auto hover_hint_color = QColor(41, 43, 50, 200);
+            QPen hint_pen(hover_hint_color);
+            hint_pen.setCapStyle( Qt::RoundCap );
+            hint_pen.setJoinStyle( Qt::MiterJoin );
+            hint_pen.setWidthF( 1.5*qMax((qreal)1.0, 20/width ) );
+            /* === SIERRA BREEZE === */
+
             switch( type() )
             {
 
                 case DecorationButtonType::Close:
                 {
-                    painter->drawLine( QPointF( 5, 5 ), QPointF( 13, 13 ) );
-                    painter->drawLine( 13, 5, 5, 13 );
+                    QColor button_color = QColor(242, 80, 86);
+                    if (!c->isActive())
+                        button_color = QColor(199, 199, 199);
+
+                    painter->setBrush( button_color );
+                    painter->setPen( Qt::NoPen );
+                    painter->drawEllipse( QRectF( 0, 0, 18, 18 ) );
+                    painter->setBrush( Qt::NoBrush );
+                    if ( isHovered() )
+                    {
+                        painter->setPen( hint_pen );
+                        // painter->setPen(pen);
+                        // it's a cross
+                        painter->drawLine( QPointF( 6, 6 ), QPointF( 12, 12 ) );
+                        painter->drawLine( QPointF( 6, 12 ), QPointF( 12, 6 ) );
+                    }
+                    painter->setPen( pen );
+
                     break;
                 }
 
                 case DecorationButtonType::Maximize:
                 {
-                    if( isChecked() )
+                    QColor button_color = QColor(19, 209, 61);
+                    if (!c->isActive())
+                        button_color = QColor(199, 199, 199);
+
+                    painter->setBrush( button_color );
+                    painter->setPen( Qt::NoPen );
+                    painter->drawEllipse( QRectF( 0, 0, 18, 18 ) );
+                    painter->setBrush( Qt::NoBrush );
+                    if ( isHovered() )
                     {
-                        pen.setJoinStyle( Qt::RoundJoin );
-                        painter->setPen( pen );
+                        painter->setPen( hint_pen );
+                        // two triangles
+                        QPainterPath path1, path2;
+                        path1.moveTo(5, 13);
+                        path1.lineTo(11, 13);
+                        path1.lineTo(5, 7);
 
-                        painter->drawPolygon( QVector<QPointF>{
-                            QPointF( 4, 9 ),
-                            QPointF( 9, 4 ),
-                            QPointF( 14, 9 ),
-                            QPointF( 9, 14 )} );
+                        path2.moveTo(13, 5);
+                        path2.lineTo(7, 5);
+                        path2.lineTo(13, 11);
 
-                    } else {
-                        painter->drawPolyline( QVector<QPointF>{
-                            QPointF( 4, 11 ),
-                            QPointF( 9, 6 ),
-                            QPointF( 14, 11 )});
+                        painter->fillPath(path1, QBrush(hover_hint_color));
+                        painter->fillPath(path2, QBrush(hover_hint_color));
                     }
+                    painter->setPen( pen );
                     break;
                 }
 
                 case DecorationButtonType::Minimize:
                 {
-                    painter->drawPolyline( QVector<QPointF>{
-                        QPointF( 4, 7 ),
-                        QPointF( 9, 12 ),
-                        QPointF( 14, 7 ) });
+                    QColor button_color = QColor(252, 190, 7);
+                    if (!c->isActive())
+                        button_color = QColor(199, 199, 199);
+
+                    painter->setBrush( button_color );
+                    painter->setPen( Qt::NoPen );
+                    painter->drawEllipse( QRectF( 0, 0, 18, 18 ) );
+                    painter->setBrush( Qt::NoBrush );
+                    if ( isHovered() )
+                    {
+                        painter->setPen( hint_pen );
+                        painter->drawLine( QPointF( 5, 9 ), QPointF( 13, 9 ) );
+                    }
+                    painter->setPen( pen );
                     break;
                 }
 
