@@ -41,10 +41,10 @@ namespace Lightly
         //Frame_FrameRadius = 5,
 
         //* titlebar metrics, in units of small spacing
-        TitleBar_TopMargin = 2,
-        TitleBar_BottomMargin = 2,
+        TitleBar_TopMargin = 3,
+        TitleBar_BottomMargin = 3,
         TitleBar_SideMargin = 4,
-        TitleBar_ButtonSpacing = 2,
+        TitleBar_ButtonSpacing = 3,
 
         // shadow dimensions (pixels)
         Shadow_Overlap = 3,
