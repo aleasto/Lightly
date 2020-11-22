@@ -661,7 +661,7 @@ namespace Lightly
         switch( m_internalSettings->buttonSize() )
         {
             case InternalSettings::ButtonTiny: return baseSize;
-            case InternalSettings::ButtonSmall: return baseSize*1.5;
+            case InternalSettings::ButtonSmall: return baseSize*1.7;
             default:
             case InternalSettings::ButtonDefault: return baseSize*2;
             case InternalSettings::ButtonLarge: return baseSize*2.5;
