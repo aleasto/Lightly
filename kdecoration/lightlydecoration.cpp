@@ -191,17 +191,22 @@ namespace Lightly
     //________________________________________________________________
     QColor Decoration::titleBarColor() const
     {
+        QColor ret;
 
         auto c = client().data();
-        if( hideTitleBar() ) return c->color( ColorGroup::Inactive, ColorRole::TitleBar );
+        if( hideTitleBar() ) ret = c->color( ColorGroup::Inactive, ColorRole::TitleBar );
         else if( m_animation->state() == QAbstractAnimation::Running )
         {
-            return KColorUtils::mix(
+            ret = KColorUtils::mix(
                 c->color( ColorGroup::Inactive, ColorRole::TitleBar ),
                 c->color( ColorGroup::Active, ColorRole::TitleBar ),
                 m_opacity );
-        } else return c->color( c->isActive() ? ColorGroup::Active : ColorGroup::Inactive, ColorRole::TitleBar );
+        } else ret = c->color( c->isActive() ? ColorGroup::Active : ColorGroup::Inactive, ColorRole::TitleBar );
 
+        if (isMaximized()) {
+            ret.setAlpha(255);
+        }
+        return ret;
     }
 
     //________________________________________________________________
