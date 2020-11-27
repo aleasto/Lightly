@@ -42,6 +42,10 @@ namespace Lightly
     //* contrast for arrow and treeline rendering
     static const qreal arrowShade = 0.15;
 
+    qreal opacityToAlpha(int opacity) {
+        return (qreal)(opacity * 255) / 100;
+    }
+
     //____________________________________________________________________
     Helper::Helper( KSharedConfig::Ptr config, QObject *parent ):
         _config( std::move( config ) )
@@ -58,6 +62,9 @@ namespace Lightly
                     _activeTitleBarTextColor = group.readEntry( "activeForeground", palette.color( QPalette::Active, QPalette::HighlightedText ) );
                     _inactiveTitleBarColor = group.readEntry( "inactiveBackground", palette.color( QPalette::Disabled, QPalette::Highlight ) );
                     _inactiveTitleBarTextColor = group.readEntry( "inactiveForeground", palette.color( QPalette::Disabled, QPalette::HighlightedText ) );
+
+                    _activeTitleBarColor.setAlpha(opacityToAlpha(StyleConfigData::titlebarOpacity()));
+                    _inactiveTitleBarColor.setAlpha(opacityToAlpha(StyleConfigData::titlebarOpacity()));
                 }
             });
         }
@@ -84,7 +91,9 @@ namespace Lightly
         _activeTitleBarTextColor = appGroup.readEntry( "activeForeground", globalGroup.readEntry( "activeForeground", palette.color( QPalette::Active, QPalette::HighlightedText ) ) );
         _inactiveTitleBarColor = appGroup.readEntry( "inactiveBackground", globalGroup.readEntry( "inactiveBackground", palette.color( QPalette::Disabled, QPalette::Highlight ) ) );
         _inactiveTitleBarTextColor = appGroup.readEntry( "inactiveForeground", globalGroup.readEntry( "inactiveForeground", palette.color( QPalette::Disabled, QPalette::HighlightedText ) ) );
-        
+
+        _activeTitleBarColor.setAlpha(opacityToAlpha(StyleConfigData::titlebarOpacity()));
+        _inactiveTitleBarColor.setAlpha(opacityToAlpha(StyleConfigData::titlebarOpacity()));
     }
 
     //____________________________________________________________________

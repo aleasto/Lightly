@@ -567,13 +567,51 @@
           </widget>
          </item>
          <item row="1" column="0">
+          <widget class="QLabel" name="_titlebarOpacityLabel">
+           <property name="text">
+            <string>Titlebar:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSlider" name="_titlebarOpacity">
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="singleStep">
+            <number>1</number>
+           </property>
+           <property name="pageStep">
+            <number>10</number>
+           </property>
+           <property name="value">
+            <number>80</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="invertedAppearance">
+            <bool>false</bool>
+           </property>
+           <property name="invertedControls">
+            <bool>false</bool>
+           </property>
+           <property name="tickPosition">
+            <enum>QSlider::TicksBelow</enum>
+           </property>
+           <property name="tickInterval">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
             <string>Sidebars:</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <widget class="QSlider" name="_sidebarOpacity">
            <property name="maximum">
             <number>100</number>

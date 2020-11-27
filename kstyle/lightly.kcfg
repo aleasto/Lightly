@@ -226,6 +226,10 @@
         <default>100</default>
     </entry>
     
+    <entry name="TitlebarOpacity" type="Int">
+        <default>80</default>
+    </entry>
+
     <entry name="DolphinSidebarOpacity" type="Int">
         <default>60</default>
     </entry>
